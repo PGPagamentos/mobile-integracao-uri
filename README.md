@@ -136,7 +136,6 @@ A tabela a seguir indica os parâmetros de resposta para uma transação:
 | **Parâmetro** | **Presença** | **Formato** | **Descrição** |
 | --- | :---: | :---: | --- |
 | operation | M | C | Operação realizada. Valores possíveis:<br/><ul><li>VENDA (operação de venda);</li><li>ADMINISTRATIVA (operação administrativa);</li><li>CANCELAMENTO (operação de cancelamento);</li><li>INSTALACAO (operação de instalação);</li><li>REIMPRESSAO (operação de reimpressão do último comprovante);</li><li>RELATORIO\_SINTETICO (obtém relatório sintético);</li><li>RELATORIO\_DETALHADO (obtém relatório detalhado);</li><li>RELATORIO\_RESUMIDO (obtém relatório resumido);</li><li>TESTE\_COMUNICACAO (realiza teste de comunicação);</li><li>EXIBE\_PDC (exibe o número do ponto de captura);</li><li>VERSAO (exibe a versão instalada);</li><li>CONFIGURACAO (operação de configuração);</li><li>MANUTENÇÃO (operação de manutenção).</li></ul> |
-| posTransId | M | AN | Identificador gerado na automação comercial para a transação. |
 | transactionResult | M | N | Resultado da transação efetuada. |
 | amount | MC | N | Valor autorizado, para o caso de uma operação de VENDA. |
 | currencyCode | MC | N | Código da moeda, de acordo com ISO4217. Mandatório se operação possuir o parâmetro &quot;amount&quot;. |
@@ -211,7 +210,7 @@ A tabela a seguir indica os parâmetros de resposta para resolução de transaç
 ### 3.3.5. Dados Automação
 Em todas operações do tipo &quot;Transação&quot;, a Automação deve <ins>obrigatoriamente</ins> também informar seus dados como parâmetro.
 
-Esses dados também são enviados como uma URI, porém em um _Bundle_ separado, identificado com a chave "DadosAutomacao". Os seguintes parâmetros devem ser informados:
+Esses dados também são enviados como uma URI, porém em um _Bundle_ separado, identificado com a chave "posData". Os seguintes parâmetros devem ser informados:
 
 | **Parâmetro** | **Presença** | **Formato** | **Descrição** |
 | --- | --- | --- | --- |
@@ -227,7 +226,7 @@ Esses dados também são enviados como uma URI, porém em um _Bundle_ separado, 
 ### 3.3.6. Personalização
 Visando fornecer uma experiência visual menos impactante para o usuário, a Automação Comercial pode customizar elementos de interface do cliente PayGo Integrado, de maneira que este tenha uma identidade visual o mais próximo possível da identidade visual da Automação.
 
-Esses dados também são enviados como uma URI, porém em um _Bundle_ separado, identificado com a chave "Personalizacao". Os seguintes parâmetros devem ser informados:
+Esses dados também são enviados como uma URI, porém em um _Bundle_ separado, identificado com a chave "posCustomization". Os seguintes parâmetros devem ser informados:
 
 | **Parâmetro** | **Presença** | **Formato** | **Descrição** |
 | --- | --- | --- | --- |
@@ -248,7 +247,7 @@ Esses dados também são enviados como uma URI, porém em um _Bundle_ separado, 
 #### Venda
 O exemplo a seguir mostra uma URI para uma requisição de venda, no valor de R$1,00:
 ```java
-app://payment/input?currencyCode=986&posTransId=1&amount=100&operation=VENDA
+app://payment/input?currencyCode=986&transactionId=1&amount=100&operation=VENDA
 ```
 
 #### Dados Automação
@@ -316,7 +315,7 @@ A requisição deve ser feita através do método _startActivity_. A _Intent_ de
 
 O exemplo abaixo, em linguagem Java, ilustra uma maneira de iniciar uma transação:
 ```java
-Intent transação = new Intent("br.com.setis.payment.TRANSACTION", uri);
+Intent transacao = new Intent("br.com.setis.payment.TRANSACTION", uri);
 transacao.putExtra("DadosAutomacao", dadosAutomacao);
 transação.putExtra("Personalizacao", personalizacao);
 transacao.putExtra("package", getPackageName());
@@ -354,7 +353,7 @@ Intent transacao = new Intent();
 transacao.setAction("br.com.setis.confirmation.TRANSACTION");
 transacao.putExtra("uri", uri);
 transacao.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-sendBroadcast(confirmacao);
+sendBroadcast(transacao);
 ```
 
 ### 3.4.3. Resolução de Pendência
